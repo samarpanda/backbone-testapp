@@ -7,8 +7,11 @@ app.LibraryView = Backbone.View.extend({
 	},
 	initialize: function(initialBooks){
 		this.collection = new app.Library(initialBooks);
+		this.collection.fetch({reset:true});
 		this.render();
+
 		this.listenTo(this.collection, 'add', this.renderBook);
+		this.listenTo(this.collection, 'reset', this.render);
 	},
 	render: function(){
 		this.collection.each(function(item){
@@ -19,7 +22,6 @@ app.LibraryView = Backbone.View.extend({
 		var bookView = new app.BookView({
 			model: item
 		});
-		// console.log(item, bookView.render());
 		this.$el.append( bookView.render().el );
 	},
 	addBook: function(e){
@@ -28,11 +30,27 @@ app.LibraryView = Backbone.View.extend({
 		var formData = {};
 
 		$('#addBook div').children('input').each(function(i, el){
-			if( $(el).val() != ''){
-				formData[el.id] = $(el).val();
+			// if( $(el).val() !== ''){
+			//	formData[el.id] = $(el).val();
+			// }
+
+			if( $(el).val() !==  '' ){
+				if( el.id === 'keywords' ){
+					formData[ el.id ] = [];
+					_.each( $(el).val().split( ' ' ), function(keyword){
+						formData[el.id].push({'keyword':keyword});
+					});
+				} else if( el.id === 'releaseDate' ){
+					formData[ el.id ] = new Date($(el).val()).getTime();
+				} else {
+					formData[ el.id ] = $( el ).val();
+				}
 			}
+			//Clear input
+			$(el).val('');
 		});
 
-		this.collection.add(new app.Book(formData));
+		// this.collection.add(new app.Book(formData));
+		this.collection.create( formData );
 	}
 });

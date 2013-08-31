@@ -18,7 +18,7 @@
             </div>
         </form>
 
-        <div class="bookContainer">
+        <!-- <div class="bookContainer">
             <img src="img/placeholder.png" />
             <ul>
                 <li>Title</li>
@@ -28,21 +28,23 @@
             </ul>
 
             <button class="delete">Delete</button>
-        </div>
+        </div> -->
     </div>
     <script id="bookTemplate" type="text/template">
         <img src="<%= coverImage %>" />
         <ul>
             <li><%= title %></li>
             <li><%= author %></li>
-            <li><%= releaseDate %></li>
-            <li><%= keywords %></li>
+            <li><%= new moment(releaseDate).format("DD-MM-YYYY") %></li>
+            <li><% _.each(keywords, function( keyobj ){%> <%= keyobj.keyword %><%});%></li>
         </ul>
         <button class="delete">Delete</button>
     </script>
     <script src="js/lib/jquery.min.js"></script>
     <script src="js/lib/underscore.min.js"></script>
     <script src="js/lib/backbone.min.js"></script>
+    <script src="js/lib/moment.min.js"></script>
+    <script src="js/plugins/datepickr_2.1/datepickr.min.js"></script>
     <script src="js/models/book.js"></script>
     <script src="js/collections/library.js"></script>
     <script src="js/views/book.js"></script>
